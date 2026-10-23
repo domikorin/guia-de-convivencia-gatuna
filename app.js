@@ -1632,23 +1632,75 @@ function togglePledgeItem(id) {
 function updateGuestName(val) {
   pledgeState.guestName = val;
   localStorage.setItem('mk_pledge_state', JSON.stringify(pledgeState));
+  const waLink = document.getElementById('pledgeWhatsappLink');
+  if (waLink) {
+    waLink.setAttribute('href', getWhatsAppPledgeUrl());
+  }
 }
 
 function allPledgeChecked() {
   return !!(pledgeState.p1 && pledgeState.p2 && pledgeState.p3 && pledgeState.p4);
 }
 
-function sendPledgeWhatsApp() {
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent || ''
+  );
+}
+
+function copyTextToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(() => {
+      fallbackCopyText(text);
+    });
+  } else {
+    fallbackCopyText(text);
+  }
+}
+
+function fallbackCopyText(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  } catch (_) {
+    // Ignore clipboard fallback errors
+  }
+}
+
+function getWhatsAppPledgeUrl() {
+  const t = i18n[currentLang];
+  const rawMsg = t.pledgeWhatsappMessage((pledgeState.guestName || '').trim());
+  const encoded = encodeURIComponent(rawMsg);
+  if (isMobileDevice()) {
+    return `whatsapp://send?text=${encoded}`;
+  }
+  return `https://api.whatsapp.com/send?text=${encoded}`;
+}
+
+function handlePledgeWhatsAppClick(event) {
   const t = i18n[currentLang];
   const feedbackEl = document.getElementById('pledgeFeedbackBox');
   if (!allPledgeChecked()) {
+    if (event) event.preventDefault();
     feedbackEl.className = 'pledge-badge-unlocked show';
     feedbackEl.style.background = '#FCEEEF';
     feedbackEl.style.borderColor = '#F0CDD4';
     feedbackEl.style.color = '#944252';
     feedbackEl.textContent = t.pledgeWarningMsg;
-    return;
+    return false;
   }
+
+  const rawMsg = t.pledgeWhatsappMessage((pledgeState.guestName || '').trim());
+  copyTextToClipboard(rawMsg);
 
   feedbackEl.className = 'pledge-badge-unlocked show';
   feedbackEl.style.background = '';
@@ -1656,8 +1708,21 @@ function sendPledgeWhatsApp() {
   feedbackEl.style.color = '';
   feedbackEl.textContent = t.pledgeSuccessBadge;
 
-  const msg = encodeURIComponent(t.pledgeWhatsappMessage((pledgeState.guestName || '').trim()));
-  window.open(`https://wa.me/?text=${msg}`, '_blank', 'noopener');
+  const waLink = document.getElementById('pledgeWhatsappLink');
+  if (waLink) {
+    waLink.setAttribute('href', getWhatsAppPledgeUrl());
+  }
+
+  // On mobile, if whatsapp:// scheme doesn't switch apps within 1.4s, fall back to api.whatsapp.com
+  if (isMobileDevice()) {
+    const encoded = encodeURIComponent(rawMsg);
+    setTimeout(() => {
+      if (!document.hidden) {
+        window.location.href = `https://api.whatsapp.com/send?text=${encoded}`;
+      }
+    }, 1400);
+  }
+  return true;
 }
 
 function copyPledgeMessage() {
@@ -1673,9 +1738,7 @@ function copyPledgeMessage() {
   }
 
   const rawMsg = t.pledgeWhatsappMessage((pledgeState.guestName || '').trim());
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(rawMsg);
-  }
+  copyTextToClipboard(rawMsg);
   feedbackEl.className = 'pledge-badge-unlocked show';
   feedbackEl.style.background = '';
   feedbackEl.style.borderColor = '';
@@ -1690,6 +1753,8 @@ function renderPledge() {
   document.getElementById('pledgeSubtitle').textContent = t.pledgeSubtitle;
 
   const isComplete = allPledgeChecked();
+  const waHref = getWhatsAppPledgeUrl();
+  const targetAttr = isMobileDevice() ? '' : 'target="_blank" rel="noopener"';
 
   document.getElementById('pledgeCard').innerHTML = `
     <p style="font-weight: 700; font-size: 0.98rem; color: var(--text-main);">${t.pledgeIntro}</p>
@@ -1715,9 +1780,15 @@ function renderPledge() {
         value="${(pledgeState.guestName || '').replace(/"/g, '&quot;')}"
         oninput="updateGuestName(this.value)"
       />
-      <button type="button" class="pledge-submit-btn" onclick="sendPledgeWhatsApp()">
+      <a
+        id="pledgeWhatsappLink"
+        href="${waHref}"
+        ${targetAttr}
+        class="pledge-submit-btn"
+        onclick="return handlePledgeWhatsAppClick(event)"
+      >
         ${t.pledgeWhatsappBtn}
-      </button>
+      </a>
       <button type="button" class="pledge-copy-btn" onclick="copyPledgeMessage()">
         ${t.pledgeCopyBtn}
       </button>
