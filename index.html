@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mikorin & Killua — Guía de Convivencia / House Guest Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Sticky Navigation with Active Scroll-Spy & Reading Progress Bar -->
+  <header class="navbar" id="mainNavbar">
+    <div class="navbar-inner">
+      <a href="#top" class="brand">
+        <span id="brandStickerSlot"></span>
+        <div class="brand-text-wrap">
+          <span class="brand-title">Mikorin &amp; Killua</span>
+          <span class="brand-subtitle" id="brandSub"></span>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Primary Navigation"></nav>
+
+      <div class="nav-actions">
+        <button type="button" class="art-mode-nav-btn" id="globalArtToggleBtn" onclick="toggleAllPhotos()" title="Switch between Frieren Anime Art and Real Photos"></button>
+        <div class="lang-toggle" role="group" aria-label="Language selector">
+          <button type="button" class="lang-btn active" id="langEs" onclick="setLanguage('es')">🇲🇽 ES</button>
+          <button type="button" class="lang-btn" id="langEn" onclick="setLanguage('en')">🇺🇸 EN</button>
+        </div>
+        <a href="#emergency" class="emergency-pill" id="emergencyNavBtn">🚨 SOS Vet</a>
+      </div>
+    </div>
+    <div class="scroll-progress-track" aria-hidden="true">
+      <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+    </div>
+  </header>
+
+  <!-- 1. Warm Welcome to Our House & Quick Jump Strip -->
+  <main id="top" class="container">
+    <section class="welcome-hero" data-nav-section="#top">
+      <div class="welcome-grid storybook-frame">
+        <div>
+          <div class="welcome-sticker-row" id="welcomeStickerRow"></div>
+          <h1 class="welcome-title" id="welcomeTitle"></h1>
+          <p class="welcome-lead" id="welcomeLead"></p>
+
+          <div class="guide-purpose-box">
+            <h4 id="guidePurposeTitle"></h4>
+            <p id="guidePurposeText"></p>
+          </div>
+
+          <div class="general-info-pills" id="generalInfoPills"></div>
+
+          <div class="hero-cta-row">
+            <a href="#cats-section" class="btn-hero-primary" id="welcomePrimaryBtn"></a>
+            <a href="#routine-section" class="btn-hero-secondary" id="welcomeSecondaryBtn"></a>
+          </div>
+        </div>
+
+        <div class="welcome-house-art">
+          <div class="floating-corner-sticker" id="heroCornerSticker"></div>
+          <img id="heroImg" src="assets/frieren-house-welcome.jpg" alt="Whimsical Frieren-style cottage welcome with Mikorin and Killua" />
+          <div class="art-caption-bar">
+            <span id="heroImgCaption"></span>
+            <button type="button" class="photo-toggle-chip" id="heroPhotoToggle" onclick="togglePhoto('hero')"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compact Quick-Jump Strip -->
+      <div class="scope-strip">
+        <div class="scope-strip-header">
+          <div class="scope-strip-title" id="scopeTitle"></div>
+          <span class="scope-strip-sub" id="scopeObjective"></span>
+        </div>
+        <div class="scope-grid" id="scopeGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 2. THE PROTAGONIST: Meet Mikorin & Killua + Cohabitation Rules + Special Bond (ESA) -->
+  <section id="cats-section" data-nav-section="#cats-section" class="section-cats-bg">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow" id="catsEyebrow"></div>
+        <h2 class="section-title" id="catsTitle"></h2>
+        <div class="paw-trail-divider" id="catsDivider"></div>
+        <p class="section-subtitle" id="catsSubtitle"></p>
+      </div>
+
+      <!-- Mikorin & Killua Character Dossiers (1:1 Square Frieren Portraits / Real Photos) -->
+      <div class="cats-grid" id="catsGrid"></div>
+
+      <!-- 4 Core Cohabitation Rules (Single Source of Truth for Living Together) -->
+      <div class="cohabitation-rules-box" id="cohabitationRulesBox"></div>
+
+      <!-- Polished Third-Person Explanation of Emotional Support Animals (ESA) -->
+      <div class="esa-interlude-card" id="esaInterludeCard"></div>
+    </div>
+  </section>
+
+  <!-- 3. Daily Care Routine & Interactive Sitter Checklist -->
+  <section id="routine-section" data-nav-section="#routine-section" class="section-routine-bg">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow" id="routineEyebrow"></div>
+        <h2 class="section-title" id="routineTitle"></h2>
+        <div class="paw-trail-divider" id="routineDivider"></div>
+        <p class="section-subtitle" id="routineSubtitle"></p>
+      </div>
+
+      <!-- Frieren Routine Illustration Banner -->
+      <div class="routine-hero-banner" id="routineHeroBanner"></div>
+
+      <div class="routine-layout">
+        <div>
+          <div class="routine-tabs" id="routineTabs"></div>
+          <div class="routine-panel" id="routinePanel"></div>
+        </div>
+
+        <div class="checklist-card">
+          <div class="checklist-header">
+            <div>
+              <h3 class="checklist-title" id="checklistTitle"></h3>
+              <span class="checklist-progress-pill" id="checklistProgressPill"></span>
+            </div>
+            <button type="button" class="checklist-reset" id="checklistResetBtn" onclick="resetChecklist()"></button>
+          </div>
+          <div class="checklist-progress-track">
+            <div class="checklist-progress-fill" id="checklistProgressFill"></div>
+          </div>
+          <p class="checklist-sub" id="checklistSub"></p>
+          <div id="checklistItems"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Quick House Map & Hiding-Spot Locator -->
+  <section id="locator-section" data-nav-section="#locator-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow eyebrow-gold" id="locatorEyebrow"></div>
+        <h2 class="section-title" id="locatorTitle"></h2>
+        <div class="paw-trail-divider" id="locatorDivider"></div>
+        <p class="section-subtitle" id="locatorSubtitle"></p>
+      </div>
+
+      <div class="locator-grid" id="locatorGrid"></div>
+    </div>
+  </section>
+
+  <!-- 5. Prevention: Cords, Hair Ties, Plastics, Foods & Plants (Single Source of Truth for Hazards) -->
+  <section id="hazards-section" data-nav-section="#hazards-section" class="section-hazards-bg">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow eyebrow-rose" id="hazardsEyebrow"></div>
+        <h2 class="section-title" id="hazardsTitle"></h2>
+        <div class="paw-trail-divider" id="hazardsDivider"></div>
+        <p class="section-subtitle" id="hazardsSubtitle"></p>
+      </div>
+
+      <div class="hazards-banner-grid">
+        <div class="hazards-art-box">
+          <img src="assets/frieren-hazards-notext.jpg" alt="Frieren watercolor illustration of Mikorin and Killua protected inside a floral barrier away from hair ties, cords, plastic bags, and lilies" />
+        </div>
+        <div>
+          <div class="hazard-personal-badges" id="hazardPersonalBadges"></div>
+          <h3 class="hazards-spotlight-title" id="hazardsSpotlightTitle"></h3>
+          <p class="hazards-spotlight-desc" id="hazardsSpotlightDesc"></p>
+
+          <div class="hazard-search-bar">
+            <input type="search" id="hazardSearchInput" class="hazard-input" oninput="renderHazards()" />
+          </div>
+          <div class="hazard-filter-pills" id="hazardFilterPills"></div>
+        </div>
+      </div>
+
+      <div class="hazard-cards-grid" id="hazardCardsGrid"></div>
+    </div>
+  </section>
+
+  <!-- 6. Health Warning Signs & Veterinary Contact -->
+  <section id="emergency" data-nav-section="#emergency">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow eyebrow-rose" id="emergencyEyebrow"></div>
+        <h2 class="section-title" id="emergencyTitle"></h2>
+        <div class="paw-trail-divider" id="emergencyDivider"></div>
+        <p class="section-subtitle" id="emergencySubtitle"></p>
+      </div>
+
+      <div class="emergency-grid">
+        <div class="triage-card" id="triageCard"></div>
+        <div class="vet-card" id="vetCard"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Guest Confirmation Section -->
+  <section id="pledge-section" data-nav-section="#pledge-section" class="pledge-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow eyebrow-lavender" id="pledgeEyebrow"></div>
+        <h2 class="section-title" id="pledgeTitle"></h2>
+        <p class="section-subtitle" id="pledgeSubtitle"></p>
+      </div>
+
+      <div class="pledge-card" id="pledgeCard"></div>
+    </div>
+  </section>
+
+  <!-- Floating Back-to-Top Button -->
+  <a href="#top" class="back-to-top-btn" id="backToTopBtn" aria-label="Back to top">↑</a>
+
+  <footer id="footerContent"></footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
